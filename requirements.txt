@@ -1,0 +1,2 @@
+shortuuid
+PyPDF2
