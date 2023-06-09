@@ -1,0 +1,523 @@
+{
+   "href":"/api/v2/fair-genomes_samplepreparation",
+   "meta":{
+      "href":"/api/v2/fair-genomes_samplepreparation",
+      "hrefCollection":"/api/v2/fair-genomes_samplepreparation",
+      "name":"fair-genomes_samplepreparation",
+      "label":"samplepreparation",
+      "attributes":[
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/sampleprepidentifier",
+            "fieldType":"STRING",
+            "name":"sampleprepidentifier",
+            "label":"Sampleprep identifier",
+            "description":"A unique proper name or character sequence that identifies this particular sample preparation. (NCIT:C132299)",
+            "attributes":[
+               
+            ],
+            "maxLength":255,
+            "auto":false,
+            "nillable":false,
+            "readOnly":true,
+            "labelAttribute":true,
+            "unique":true,
+            "visible":true,
+            "lookupAttribute":true,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/belongstomaterial",
+            "fieldType":"XREF",
+            "name":"belongstomaterial",
+            "label":"Belongs to material",
+            "description":"Reference to the source material from which this sample was prepared. (NCIT:C25683)",
+            "attributes":[
+               
+            ],
+            "refEntity":{
+               "href":"/api/v2/fair-genomes_material",
+               "hrefCollection":"/api/v2/fair-genomes_material",
+               "name":"fair-genomes_material",
+               "label":"material",
+               "attributes":[
+                  {
+                     "href":"/api/v2/fair-genomes_material/meta/materialidentifier",
+                     "fieldType":"STRING",
+                     "name":"materialidentifier",
+                     "label":"Material identifier",
+                     "description":"A unique proper name or character sequence that identifies this particular material. (NCIT:C93400)",
+                     "attributes":[
+                        
+                     ],
+                     "maxLength":255,
+                     "auto":false,
+                     "nillable":false,
+                     "readOnly":true,
+                     "labelAttribute":true,
+                     "unique":true,
+                     "visible":true,
+                     "lookupAttribute":true,
+                     "isAggregatable":false
+                  }
+               ],
+               "labelAttribute":"materialidentifier",
+               "idAttribute":"materialidentifier",
+               "lookupAttributes":[
+                  "materialidentifier"
+               ],
+               "isAbstract":false,
+               "writable":true,
+               "languageCode":"en",
+               "permissions":[
+                  "READ_METADATA",
+                  "COUNT_DATA",
+                  "DELETE_METADATA",
+                  "AGGREGATE_DATA",
+                  "DELETE_DATA",
+                  "READ_DATA",
+                  "ADD_DATA",
+                  "UPDATE_DATA",
+                  "UPDATE_METADATA"
+               ]
+            },
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/inputamount",
+            "fieldType":"INT",
+            "name":"inputamount",
+            "label":"Input amount",
+            "description":"Amount of input material in nanogram (ng). (AFRL:0000010)",
+            "attributes":[
+               
+            ],
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/librarypreparationkit",
+            "fieldType":"XREF",
+            "name":"librarypreparationkit",
+            "label":"Library preparation kit",
+            "description":"Pre-filled, ready-to-use reagent cartridges intented to improve chemistry, cluster density and read length as well as improve quality (Q) scores for this sample. Reagent components are encoded to interact with the sequencing system to validate compatibility with user-defined applications. (GENEPIO:0000085)",
+            "attributes":[
+               
+            ],
+            "refEntity":{
+               "href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit",
+               "hrefCollection":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit",
+               "name":"fair-genomes_samplepreparation_librarypreparationkit",
+               "label":"samplepreparation_librarypreparationkit",
+               "attributes":[
+                  {
+                     "href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/meta/value",
+                     "fieldType":"STRING",
+                     "name":"value",
+                     "label":"Value (English)",
+                     "attributes":[
+                        
+                     ],
+                     "maxLength":255,
+                     "auto":false,
+                     "nillable":false,
+                     "readOnly":true,
+                     "labelAttribute":true,
+                     "unique":true,
+                     "visible":true,
+                     "lookupAttribute":true,
+                     "isAggregatable":false
+                  }
+               ],
+               "labelAttribute":"value",
+               "idAttribute":"value",
+               "lookupAttributes":[
+                  "value"
+               ],
+               "isAbstract":false,
+               "writable":true,
+               "languageCode":"en",
+               "permissions":[
+                  "READ_METADATA",
+                  "COUNT_DATA",
+                  "DELETE_METADATA",
+                  "AGGREGATE_DATA",
+                  "DELETE_DATA",
+                  "READ_DATA",
+                  "ADD_DATA",
+                  "UPDATE_DATA",
+                  "UPDATE_METADATA"
+               ]
+            },
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/pcrfree",
+            "fieldType":"BOOL",
+            "name":"pcrfree",
+            "label":"PCR free",
+            "description":"Indicates whether a polymerase chain reaction (PCR) was used to prepare this sample. PCR is a method for amplifying a DNA base sequence using multiple rounds of heat denaturation of the DNA and annealing of oligonucleotide primers complementary to flanking regions in the presence of a heat-stable polymerase. (NCIT:C17003)",
+            "attributes":[
+               
+            ],
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/targetenrichmentkit",
+            "fieldType":"XREF",
+            "name":"targetenrichmentkit",
+            "label":"Target enrichment kit",
+            "description":"Indicates which target enrichment kit was used to prepare this sample. Target enrichment is a pre-sequencing DNA preparation step where DNA sequences are either directly amplified (amplicon or multiplex PCR-based) or captured (hybrid capture-based) in order to only focus on specific regions of a genome or DNA sample. (NCIT:C154307)",
+            "attributes":[
+               
+            ],
+            "refEntity":{
+               "href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit",
+               "hrefCollection":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit",
+               "name":"fair-genomes_samplepreparation_targetenrichmentkit",
+               "label":"samplepreparation_targetenrichmentkit",
+               "attributes":[
+                  {
+                     "href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/meta/value",
+                     "fieldType":"STRING",
+                     "name":"value",
+                     "label":"Value (English)",
+                     "attributes":[
+                        
+                     ],
+                     "maxLength":255,
+                     "auto":false,
+                     "nillable":false,
+                     "readOnly":true,
+                     "labelAttribute":true,
+                     "unique":true,
+                     "visible":true,
+                     "lookupAttribute":true,
+                     "isAggregatable":false
+                  }
+               ],
+               "labelAttribute":"value",
+               "idAttribute":"value",
+               "lookupAttributes":[
+                  "value"
+               ],
+               "isAbstract":false,
+               "writable":true,
+               "languageCode":"en",
+               "permissions":[
+                  "READ_METADATA",
+                  "COUNT_DATA",
+                  "DELETE_METADATA",
+                  "AGGREGATE_DATA",
+                  "DELETE_DATA",
+                  "READ_DATA",
+                  "ADD_DATA",
+                  "UPDATE_DATA",
+                  "UPDATE_METADATA"
+               ]
+            },
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/umispresent",
+            "fieldType":"BOOL",
+            "name":"umispresent",
+            "label":"UMIs present",
+            "description":"Indicates whether any unique molecular identifiers (UMIs) are present. An UMI barcode is a short nucleotide sequence that is used to identify reads originating from an individual mRNA molecule. (EFO:0010199)",
+            "attributes":[
+               
+            ],
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/intendedinsertsize",
+            "fieldType":"INT",
+            "name":"intendedinsertsize",
+            "label":"Intended insert size",
+            "description":"In paired-end sequencing, the DNA between the adapter sequences is the insert. The length of this sequence is known as the insert size, not to be confused with the inner distance between reads. So, fragment length equals read adapter length (2x) plus insert size, and insert size equals read lenght (2x) plus inner distance. (FG:0000001)",
+            "attributes":[
+               
+            ],
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         },
+         {
+            "href":"/api/v2/fair-genomes_samplepreparation/meta/intendedreadlength",
+            "fieldType":"INT",
+            "name":"intendedreadlength",
+            "label":"Intended read length",
+            "description":"The number of nucleotides intended to be ordered from each side of a nucleic acid fragment obtained after the completion of a sequencing process. (NCIT:C153362)",
+            "attributes":[
+               
+            ],
+            "auto":false,
+            "nillable":true,
+            "readOnly":false,
+            "labelAttribute":false,
+            "unique":false,
+            "visible":true,
+            "lookupAttribute":false,
+            "isAggregatable":false
+         }
+      ],
+      "labelAttribute":"sampleprepidentifier",
+      "idAttribute":"sampleprepidentifier",
+      "lookupAttributes":[
+         "sampleprepidentifier"
+      ],
+      "isAbstract":false,
+      "writable":true,
+      "languageCode":"en",
+      "permissions":[
+         "READ_METADATA",
+         "COUNT_DATA",
+         "DELETE_METADATA",
+         "AGGREGATE_DATA",
+         "DELETE_DATA",
+         "READ_DATA",
+         "ADD_DATA",
+         "UPDATE_DATA",
+         "UPDATE_METADATA"
+      ]
+   },
+   "start":0,
+   "num":32,
+   "total":9,
+   "items":[
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_A2020%2F2",
+         "sampleprepidentifier":"sampleprep_A2020/2",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_eFj3pd5qO34z",
+            "materialidentifier":"mmci_eFj3pd5qO34z"
+         },
+         "inputamount":15,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/Accel%E2%84%A2%20%20Amplicon%20%20Custom%20Core%20%20Kit%20",
+            "value":"Accel™  Amplicon  Custom Core  Kit "
+         },
+         "pcrfree":false,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/Accel%E2%84%A2%20%20Amplicon%20%20Custom%20Core%20%20Kit",
+            "value":"Accel™  Amplicon  Custom Core  Kit"
+         },
+         "umispresent":false,
+         "intendedinsertsize":264,
+         "intendedreadlength":151
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_A2022%2F1",
+         "sampleprepidentifier":"sampleprep_A2022/1",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_Rv0KkT5E3RgO",
+            "materialidentifier":"mmci_Rv0KkT5E3RgO"
+         },
+         "inputamount":15,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/Accel%E2%84%A2%20%20Amplicon%20%20Custom%20Core%20%20Kit%20",
+            "value":"Accel™  Amplicon  Custom Core  Kit "
+         },
+         "pcrfree":false,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/Accel%E2%84%A2%20%20Amplicon%20%20Custom%20Core%20%20Kit",
+            "value":"Accel™  Amplicon  Custom Core  Kit"
+         },
+         "umispresent":false,
+         "intendedinsertsize":264,
+         "intendedreadlength":151
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_HC2020%2F1",
+         "sampleprepidentifier":"sampleprep_HC2020/1",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_QE0KkT5ECYF3",
+            "materialidentifier":"mmci_QE0KkT5ECYF3"
+         },
+         "inputamount":100,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/%20KAPA%20%20HyperPlus%20Kit",
+            "value":" KAPA  HyperPlus Kit"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/KAPA%20%20HyperChoice",
+            "value":"KAPA  HyperChoice"
+         },
+         "umispresent":false,
+         "intendedinsertsize":200,
+         "intendedreadlength":74
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_HC2020%2F2",
+         "sampleprepidentifier":"sampleprep_HC2020/2",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_fGySkT5oVt3p",
+            "materialidentifier":"mmci_fGySkT5oVt3p"
+         },
+         "inputamount":100,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/%20KAPA%20%20HyperPlus%20Kit",
+            "value":" KAPA  HyperPlus Kit"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/KAPA%20%20HyperChoice",
+            "value":"KAPA  HyperChoice"
+         },
+         "umispresent":false,
+         "intendedinsertsize":200,
+         "intendedreadlength":74
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_HC2020%2F3",
+         "sampleprepidentifier":"sampleprep_HC2020/3",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_wlQdT6DpR4vT",
+            "materialidentifier":"mmci_wlQdT6DpR4vT"
+         },
+         "inputamount":100,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/%20KAPA%20%20HyperPlus%20Kit",
+            "value":" KAPA  HyperPlus Kit"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/KAPA%20%20HyperChoice",
+            "value":"KAPA  HyperChoice"
+         },
+         "umispresent":false,
+         "intendedinsertsize":200,
+         "intendedreadlength":74
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_TSO2020%2F1",
+         "sampleprepidentifier":"sampleprep_TSO2020/1",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_5E22grCD9nDo",
+            "materialidentifier":"mmci_5E22grCD9nDo"
+         },
+         "inputamount":121,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/TruSight%20Oncology%20Library%20%20Prep%20(Illumina)",
+            "value":"TruSight Oncology Library  Prep (Illumina)"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/TruSight%20Oncology%20%20Enrichment%20(Illumina)",
+            "value":"TruSight Oncology  Enrichment (Illumina)"
+         },
+         "umispresent":true,
+         "intendedinsertsize":70,
+         "intendedreadlength":101
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_TSO2020%2F2",
+         "sampleprepidentifier":"sampleprep_TSO2020/2",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_5Eq2khDCYF4D",
+            "materialidentifier":"mmci_5Eq2khDCYF4D"
+         },
+         "inputamount":121,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/TruSight%20Oncology%20Library%20%20Prep%20(Illumina)",
+            "value":"TruSight Oncology Library  Prep (Illumina)"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/TruSight%20Oncology%20%20Enrichment%20(Illumina)",
+            "value":"TruSight Oncology  Enrichment (Illumina)"
+         },
+         "umispresent":true,
+         "intendedinsertsize":70,
+         "intendedreadlength":101
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_TSO2020%2F3",
+         "sampleprepidentifier":"sampleprep_TSO2020/3",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_5T520hDCY3Lf",
+            "materialidentifier":"mmci_5T520hDCY3Lf"
+         },
+         "inputamount":121,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/TruSight%20Oncology%20Library%20%20Prep%20(Illumina)",
+            "value":"TruSight Oncology Library  Prep (Illumina)"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/TruSight%20Oncology%20%20Enrichment%20(Illumina)",
+            "value":"TruSight Oncology  Enrichment (Illumina)"
+         },
+         "umispresent":true,
+         "intendedinsertsize":70,
+         "intendedreadlength":101
+      },
+      {
+         "_href":"/api/v2/fair-genomes_samplepreparation/sampleprep_TSO2020%2F4",
+         "sampleprepidentifier":"sampleprep_TSO2020/4",
+         "belongstomaterial":{
+            "_href":"/api/v2/fair-genomes_material/mmci_E2LPcC3kRo7X",
+            "materialidentifier":"mmci_E2LPcC3kRo7X"
+         },
+         "inputamount":121,
+         "librarypreparationkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_librarypreparationkit/TruSight%20Oncology%20Library%20%20Prep%20(Illumina)",
+            "value":"TruSight Oncology Library  Prep (Illumina)"
+         },
+         "pcrfree":true,
+         "targetenrichmentkit":{
+            "_href":"/api/v2/fair-genomes_samplepreparation_targetenrichmentkit/TruSight%20Oncology%20%20Enrichment%20(Illumina)",
+            "value":"TruSight Oncology  Enrichment (Illumina)"
+         },
+         "umispresent":true,
+         "intendedinsertsize":70,
+         "intendedreadlength":101
+      }
+   ]
+}

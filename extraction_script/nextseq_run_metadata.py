@@ -4,6 +4,7 @@ import PyPDF2
 import sys
 from datetime import date
 
+#script can be run by command: python nextseq_run_metadata_extraction.py RunParameters.xml RunCompletionStatus.xml RunInfo.xml report.pdf
 
 class RunInfoMMCI:
 
@@ -15,7 +16,7 @@ class RunInfoMMCI:
         self.seqMethod: str = ''        #always "Illumina Sequencing"
         #self.avReadDepth: str = '' - data from CGW doesnt include this information, it can be calculated using SAMtools tool with command "samtools depth"
         #self.obsReadLength: str = '' - data from CGW doesnt include this information, it can be calculated using SAMtools tool with command "samtools stats"
-        self.obsInsertSize: int = 0     #QC Metrics Report - Trusight Oncology 500 (pdf)
+        self.obsInsertSize: int = 0     #QC Metrics Report - Trusight Oncology 500 (pdf) - FILE PER ONE SAMPLE FROM ANALYSIS
         self.percentageQ30: int = ''  #available in InterOp file possible to open only in BaseSpace, cannot be extracted
         self.percentageTR20: str = ''  #this number is not relevant for MMCI
         self.clusterDensity: float = 0  #XML_RunCompletionStatus
