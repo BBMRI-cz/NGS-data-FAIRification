@@ -1,2 +1,5 @@
 data/
+playground/
+backup/
+.ipynb_checkpoints/
 **/pseudo_table.json
