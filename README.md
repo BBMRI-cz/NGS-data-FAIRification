@@ -5,16 +5,16 @@ Integration and cataloguing of biobanking and clinical data using FAIR Genomes M
 The following folder contain various codes to process Sequencing runs
 
 - pseudonymization
-  - [pseudonymize_pipeline.sh](#pseudonymizepipelinesh)
+  - [pseudonymize_pipeline.sh](https://github.com/BBMRI-cz/NGS-data-FAIRification/blob/master/pseudonymization/pseudonymize_pipeline.sh)
   - remove_files.sh
-  - [pseudonymization.py](#pseudonymizationpy)
+  - [pseudonymization.py](https://github.com/BBMRI-cz/NGS-data-FAIRification/blob/master/pseudonymization/pseudonymization.py)
   - replace_predictive.sh
 - extraction_script
   - miseq_run_metadata.py
   - nextseq_run_metadata.py
 
 #### pseudonymize_pipeline.sh
-This script takes all runs and pseudonymizes them one by one.  
+This script takes all runs and pseudonymizes them one by one.
 
 #### pseudonymization.py 
 This script pseudonymizes majority of the Sequencing run, mainly the file names and SampleSheet
