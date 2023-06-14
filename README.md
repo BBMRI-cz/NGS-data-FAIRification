@@ -13,10 +13,10 @@ The following folder contain various codes to process Sequencing runs
   - miseq_run_metadata.py
   - nextseq_run_metadata.py
 
-#### pseudonymize_pipeline.sh
+### pseudonymize_pipeline.sh
 This script takes all runs and pseudonymizes them one by one.
 
-#### pseudonymization.py 
+### pseudonymization.py 
 This script pseudonymizes majority of the Sequencing run, mainly the file names and SampleSheet
 Also it collects data from BBM exports and connects them to the Sequencing run.
 
