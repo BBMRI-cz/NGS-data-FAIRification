@@ -1,0 +1,28 @@
+f_backup=$1
+f_seq=$2
+
+cp -r "${f_backup}/Data/RTALogs" "${f_seq}/Data/RTALogs"
+cp -r "${f_backup}/Data/Intensities/L001" "${f_seq}/Data/Intensities/L001"
+cp -r "${f_backup}/Data/Intensities/BaseCalls" "${f_seq}/Data/Intensities/BaseCalls"
+cp -r "${f_backup}/Thumbnail_Images" "${f_seq}/Thumbnail_Images" 
+cp -r "${f_backup}/Recipe" "${f_seq}/Recipe"
+cp "${f_backup}/Data/Intensities/RTAConfiguration.xml" "${f_seq}/Data/Intensities/RTAConfiguration.xml"
+cp "${f_backup}/Data/Intensities/BaseCalls/SampleSheet.csv" "${f_seq}/Data/Intensities/BaseCalls/SampleSheet.csv"
+cp "${f_backup}/Data/Intensities/BaseCalls/Alignment/SampleSheetUsed.csv" "${f_seq}/Data/Intensities/BaseCalls/Alignment/SampleSheetUsed.csv"
+cp "${f_backup}/Data/Intensities/BaseCalls/Alignment/GenerateFASTQRunStatistics.xml" "${f_seq}/Data/Intensities/BaseCalls/Alignment/GenerateFASTQRunStatistics.xml"
+cp "${f_backup}/Basecalling_Netcopy_complete_Read1.txt" "${f_seq}/Basecalling_Netcopy_complete_Read1.txt"
+cp "${f_backup}/Basecalling_Netcopy_complete_Read2.txt" "${f_seq}/Basecalling_Netcopy_complete_Read2.txt"
+cp "${f_backup}/Basecalling_Netcopy_complete_Read3.txt" "${f_seq}/Basecalling_Netcopy_complete_Read3.txt"
+cp "${f_backup}/Basecalling_Netcopy_complete_Read4.txt" "${f_seq}/Basecalling_Netcopy_complete_Read4.txt"
+cp "${f_backup}/ImageAnalysis_Netcopy_complete_Read1.txt" "${f_seq}/ImageAnalysis_Netcopy_complete_Read1.txt"
+cp "${f_backup}/ImageAnalysis_Netcopy_complete_Read2.txt" "${f_seq}/ImageAnalysis_Netcopy_complete_Read2.txt"
+cp "${f_backup}/ImageAnalysis_Netcopy_complete_Read3.txt" "${f_seq}/ImageAnalysis_Netcopy_complete_Read3.txt"
+cp "${f_backup}/ImageAnalysis_Netcopy_complete_Read4.txt" "${f_seq}/ImageAnalysis_Netcopy_complete_Read4.txt"
+cp "${f_backup}/QueuedForAnalysis.txt" "${f_seq}/QueuedForAnalysis.txt"
+cp "${f_backup}/RTAComplete.txt" "${f_seq}/RTAComplete.txt"
+
+cp "${f_backup}/InterOp/IndexMetricsOut.bin" "${f_seq}/InterOp/IndexMetricsOut.bin"
+cp "${f_backup}/Data/Intensities/BaseCalls/Alignment/AdapterCounts.txt" "${f_seq}/Data/Intensities/BaseCalls/Alignment/AdapterCounts.txt"
+cp "${f_backup}/Data/Intensities/BaseCalls/Alignment/DemultiplexSummaryF1L1.txt" "${f_seq}/Data/Intensities/BaseCalls/Alignment/DemultiplexSummaryF1L1.txt" 
+cp "${f_backup}/GenerateFASTQRunStatistics.xml" "${f_seq}/GenerateFASTQRunStatistics.xml"
+cp -r "${f_backup}/Analysis" "${f_seq}/Analysis"
