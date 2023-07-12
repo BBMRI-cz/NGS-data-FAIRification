@@ -7,8 +7,6 @@ import json
 
 class RunOrganiser:
 
-    sc_dir = "/home/houfek/Work/NGS-data-FAIRification/playground/muni-sc/"
-
     def __init__(self, path_to_pseudonymized_runs, path_to_oragnised_storage, path_to_patients):
         self.pseudo_runs = path_to_pseudonymized_runs
         self.organised_runs = path_to_oragnised_storage
@@ -70,10 +68,10 @@ class RunOrganiser:
         new_generate_statistics = os.path.join(new_general_file_path, "GenerateFASTQRunStatistic.xml")
         shutil.copy2(generate_statistics, new_generate_statistics)
 
-        data_intensities_basecalls = os.path.join(general_file_path, "Data", "Intensities", "BaseCalls")
-        new_data_intenstisities_basecalls = os.path.join(new_general_file_path, "Data", "Intensities")
-        Path(new_data_intenstisities_basecalls).mkdir(parents=True, exist_ok=True)
-        shutil.copytree(data_intensities_basecalls, os.path.join(new_data_intenstisities_basecalls, "BaseCalls"))
+        data_intensities_basecalls_alignments = os.path.join(general_file_path, "Data", "Intensities", "BaseCalls", "Alignment")
+        new_data_intenstisities_basecalls_alignment = os.path.join(new_general_file_path, "Data", "Intensities", "Basecalls")
+        Path(new_data_intenstisities_basecalls_alignment).mkdir(parents=True, exist_ok=True)
+        shutil.copytree(data_intensities_basecalls_alignments, os.path.join(new_data_intenstisities_basecalls_alignment, "Alignment"))
 
         data_inter_op = os.path.join(general_file_path, "InterOp")
         new_data_inter_op = os.path.join(new_general_file_path, "InterOp")
@@ -106,8 +104,6 @@ class RunOrganiser:
 
         for file in os.listdir(basecalls):
             if pseudo_number in file:
-                print(str(os.path.join(basecalls, file)))
-                print(str(os.path.join(new_fastq_folder, file)))
                 shutil.copy2(os.path.join(basecalls, file), os.path.join(new_fastq_folder, file))
 
         

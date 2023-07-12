@@ -98,6 +98,7 @@ class Pseudonymizer:
         clincal_data = []
 
         predictive_numbers = sample_list_header[id:]
+        predictive_numbers = [predictive_number.replace("_", "-") for predictive_number in predictive_numbers]
 
         for pred_number in predictive_numbers:
             pseudo_id = self.add_pseudo_ID(pred_number)

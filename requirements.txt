@@ -1,3 +1,2 @@
-shortuuid
 PyPDF2
 molgenis-py-client
