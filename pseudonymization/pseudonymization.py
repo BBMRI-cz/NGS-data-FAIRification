@@ -1,9 +1,9 @@
-import shortuuid
 import json
 import os
 import pandas as pd
 import xml.etree.ElementTree as ET
 import argparse
+import uuid
 
 class Pseudonymizer:
     """
@@ -29,7 +29,7 @@ class Pseudonymizer:
 
     xml_prefix = "{http://www.bbmri.cz/schemas/biobank/data}"
 
-    def __init__(self, run_path, bbm_export_folder_path, pseudonimisation_table_path):
+    def __init__(self, run_path, bbm_export_folder_path, pseudonimisation_table_path, pseudonimisation_table_patient_path):
         """
         Parameters
         ----------
@@ -44,6 +44,7 @@ class Pseudonymizer:
         self.run_path = run_path
         self.export_path = bbm_export_folder_path
         self.pseudo_table_path = pseudonimisation_table_path
+        self.pseudo_patient_path = pseudonimisation_table_patient_path
 
     def __str__(self) -> str:
         return f"""Path to processed sequence run:\n {self.seq_path}\n
@@ -142,7 +143,7 @@ class Pseudonymizer:
         
         existing_ids = [val["predictive_number"] for val in pseudo_list]
         if original_ID not in existing_ids:                  
-            pseudoID = "mmci_" + shortuuid.ShortUUID().random(length=24)
+            pseudoID = "mmci_sample_" + str(uuid.uuid4())
             with open(self.pseudo_table_path, 'w+') as outfile:
                 sample = {
                     "predictive_number": original_ID,
@@ -180,18 +181,55 @@ class Pseudonymizer:
             tree = ET.parse(export_path)
             root = tree.getroot()
             lts = root.find(f"{self.xml_prefix}LTS")
+            found_predictive = False
+            sample_data = []
             for child in lts:
                 if ("/" in child.attrib["predictive_number"] and
                 self.fix_predictive_number(child.attrib["predictive_number"]) == predictive_number):
+                    found_predictive = True
                     if "tissue" in child.tag:
-                        clinical_data.append(self.prepare_tissue(child, pseudo_number))
+                        sample_data.append(self.prepare_tissue(child, pseudo_number))
                     if "genome" in child.tag:
-                        clinical_data.append(self.prepare_genome(child, pseudo_number))
+                        sample_data.append(self.prepare_genome(child, pseudo_number))
                     if "serum" in child.tag:
-                        clinical_data.append(self.prepare_serum(child, pseudo_number))
-        
+                        sample_data.append(self.prepare_serum(child, pseudo_number))
+
+            if found_predictive:
+                patient = {
+                    "ID": self.generate_pseudo_patient_id(root.get("id")),
+                    "Birth": f"{root.get('month')}/{root.get('year')}",
+                    "Sex": root.get("sex"),
+                    "Samples": sample_data
+                }
+                clinical_data.append(patient)
+
         return clinical_data
-    
+
+    def generate_pseudo_patient_id(self, original_ID):
+        data = {"patients":[]}
+        if os.path.exists(self.pseudo_patient_path):
+            with open(self.pseudo_patient_path, 'r') as json_file:
+                data = json.load(json_file)
+                pseudo_list = data["patients"]
+        else:
+            pseudo_list = []
+
+        existing_ids = [val["patient_ID"] for val in pseudo_list]
+        if original_ID not in existing_ids:
+            pseudoID = "mmci_patient_" + str(uuid.uuid4())
+            with open(self.pseudo_patient_path, 'w+') as outfile:
+                sample = {
+                    "patient_ID": original_ID,
+                    "patient_pseudo_ID": pseudoID}
+                pseudo_list.append(sample)
+                data["patients"] = pseudo_list
+                json.dump(data, outfile, indent=4)
+            return pseudoID
+        else:
+            for val in pseudo_list:
+                if val["patient_ID"] == original_ID:
+                    return val["patient_pseudo_ID"]
+
     def fix_predictive_number(self, predictive_number):
         """Unifies predictive number format
         Parameters
@@ -325,9 +363,20 @@ class Pseudonymizer:
         dict_list_unique : List[Dict]
             List of dictionaries without duplicates
         """
+        old_list = [tuple(d.items()) for d in dict_list]
+        start=0
+        no_duplicates = self.remove_duplicate(start, old_list, [])
+        dict_no_duplicates = [dict(t) for t in list(no_duplicates)]
 
-        dict_list_unique = [dict(t) for t in {tuple(d.items()) for d in dict_list}]
-        return dict_list_unique
+        return dict_no_duplicates
+
+    def remove_duplicate(self, start, oldlist, newlist):
+        if start==len(oldlist):return newlist  #base condition
+        if oldlist[start] not in newlist:   #checking whether element present in new list  or not
+            newlist.append(oldlist[start])
+
+        return self.remove_duplicate(start+1, oldlist, newlist)
+
 
     def create_temporary_pseudo_table(self, predictive_pseudo_tuples):
         """Create a temporary pseudonymisation_table json file consisting
@@ -386,8 +435,8 @@ if __name__ == "__main__":
         description="Pseudonymize sequencing run and adds clinical data to it")
     parser.add_argument("-r", "--run", type=str, required=True, help="Path to sequencing run path that will be pseudonymized")
     parser.add_argument("-e", "--export", type=str, required=True, help="Path to Biobank Export to extract clinical data")
-    parser.add_argument("-p", "--pseudo", type=str, required=True, help="Path to pseudonymization json file")
-    
+    parser.add_argument("-s", "--samples_pseudo", type=str, required=True, help="Path to pseudonymization json file")
+    parser.add_argument("-p", "--patients_pseudo", type=str, required=True, help="Path to patient pseudonymization json file")
     args = parser.parse_args()
     
-    Pseudonymizer(args.run, args.export, args.pseudo)()
+    Pseudonymizer(args.run, args.export, args.samples_pseudo, args.patients_pseudo)()

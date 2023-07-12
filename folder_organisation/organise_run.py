@@ -3,14 +3,16 @@ import pandas as pd
 import argparse
 from pathlib import Path
 import shutil
+import json
 
 class RunOrganiser:
 
     sc_dir = "/home/houfek/Work/NGS-data-FAIRification/playground/muni-sc/"
 
-    def __init__(self, path_to_pseudonymized_runs, path_to_oragnised_storage):
+    def __init__(self, path_to_pseudonymized_runs, path_to_oragnised_storage, path_to_patients):
         self.pseudo_runs = path_to_pseudonymized_runs
         self.organised_runs = path_to_oragnised_storage
+        self.organised_patients = path_to_patients
 
     def __call__(self):
         self.organise_run()
@@ -23,6 +25,7 @@ class RunOrganiser:
             Path(run_path).mkdir(parents=True, exist_ok=True)
             self.create_sample_dirs(run_path, file)
             self.create_general_file(run_path, file)
+            self.create_patient_files(file)
 
     def split_file_to_parts(self, filename):
         splitted_filename = filename.split("_")
@@ -75,6 +78,14 @@ class RunOrganiser:
         data_inter_op = os.path.join(general_file_path, "InterOp")
         new_data_inter_op = os.path.join(new_general_file_path, "InterOp")
         shutil.copytree(data_inter_op, new_data_inter_op)
+
+        data_logs = os.path.join(general_file_path, "Logs")
+        new_data_logs = os.path.join(new_general_file_path, "Logs")
+        shutil.copytree(data_logs, new_data_logs)
+
+        data_config = os.path.join(general_file_path, "Config")
+        new_data_config = os.path.join(new_general_file_path, "Config")
+        shutil.copytree(data_config, new_data_config)
 
         sample_sheet = os.path.join(general_file_path, "SampleSheet.csv")
         new_sample_sheet = os.path.join(new_general_file_path, "SampleSheet.csv")
@@ -142,13 +153,34 @@ class RunOrganiser:
             if file.endswith("RemoveDuplicates.log"):
                 shutil.copy2(os.path.join(path, file), os.path.join(new_path, file))
 
+    def create_patient_files(self, run_file):
+        with open(os.path.join(self.pseudo_runs, run_file, "clinical_info.json")) as json_file:
+            data = json.load(json_file)
+
+        if len(data["clinical_data"]) == 0:
+            return None
+
+        for patient in data["clinical_data"]:
+            year = patient["Birth"].replace("--", "").split("/")[1]
+            Path(os.path.join(self.organised_patients, year)).mkdir(parents=True, exist_ok=True)
+            patient_extraction = {
+                "ID": patient["ID"],
+                "Birth": patient["Birth"],
+                "Sex": patient["Sex"]
+                }
+            patient_file = os.path.join(self.organised_patients, year, f"{patient['ID']}.json")
+            with open(patient_file, "w") as f:
+                json.dump(patient_extraction, f, indent=4)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="Organiser",
         description="Organise pseudonymized runs into a specifed output folder")
     parser.add_argument("-r", "--run", type=str, required=True, help="Path to sequencing run path that will be pseudonymized")
     parser.add_argument("-o", "--output", type=str, required=True, help="Path to the organise file")
-    
+    parser.add_argument("-p", "--patients", type=str, required=True, help="Path to a patient folder")
+
     args = parser.parse_args()
     
-    RunOrganiser(args.run, args.output)()
+    RunOrganiser(args.run, args.output, args.patients)()
