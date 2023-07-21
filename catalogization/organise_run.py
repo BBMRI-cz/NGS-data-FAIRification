@@ -7,23 +7,24 @@ import json
 
 class RunOrganiser:
 
-    def __init__(self, path_to_pseudonymized_runs, path_to_oragnised_storage, path_to_patients):
-        self.pseudo_runs = path_to_pseudonymized_runs
+    def __init__(self, path_to_pseudonymized_runs_folder, name_of_single_run, path_to_oragnised_storage, path_to_patients):
+        self.pseudo_run = path_to_pseudonymized_runs_folder
+        self.file = name_of_single_run
         self.organised_runs = path_to_oragnised_storage
         self.organised_patients = path_to_patients
 
     def __call__(self):
-        self.organise_run()
+        return self.organise_run()
 
     def organise_run(self):
-        for file in os.listdir(self.pseudo_runs):
-            y, machine, run_number = self.split_file_to_parts(file)
-            print(f"Run {file}: {y} --> {machine} --> {run_number} --> {file}")
-            run_path = os.path.join(self.organised_runs, y, machine, run_number)
-            Path(run_path).mkdir(parents=True, exist_ok=True)
-            self.create_sample_dirs(run_path, file)
-            self.create_general_file(run_path, file)
-            self.create_patient_files(file)
+        y, machine, run_number = self.split_file_to_parts(self.file)
+        print(f"Run {self.file}: {y} --> {machine} --> {run_number} --> {self.file}")
+        run_path = os.path.join(self.organised_runs, y, machine, run_number)
+        Path(run_path).mkdir(parents=True, exist_ok=True)
+        self.create_sample_dirs(run_path, self.file)
+        self.create_general_file(run_path, self.file)
+        self.create_patient_files(self.file)
+        return os.path.join(y, machine, run_number, self.file)
 
     def split_file_to_parts(self, filename):
         splitted_filename = filename.split("_")
@@ -38,7 +39,7 @@ class RunOrganiser:
         return f"20{year}", machine, run_number
 
     def create_sample_dirs(self, run_path, filename):
-        sample_sheet_path = os.path.join(self.pseudo_runs, filename, "SampleSheet.csv")
+        sample_sheet_path = os.path.join(self.pseudo_run, filename, "SampleSheet.csv")
         pseudo_numbers = self.get_pseudo_numbers(sample_sheet_path)
         run_path = os.path.join(run_path, filename, "Samples")
         Path(run_path).mkdir(parents=True, exist_ok=True)
@@ -48,7 +49,7 @@ class RunOrganiser:
             self.collect_data_for_pseudo_number(filename, new_pseudo_folder, pseudo_number)
 
     def create_general_file(self, new_file_path, file):
-        general_file_path = os.path.join(self.pseudo_runs, file)
+        general_file_path = os.path.join(self.pseudo_run, file)
         new_general_file_path = os.path.join(new_file_path, file)
         Path(new_general_file_path).mkdir(parents=True, exist_ok=True)
 
@@ -67,6 +68,10 @@ class RunOrganiser:
         generate_statistics = os.path.join(general_file_path, "GenerateFASTQRunStatistics.xml")
         new_generate_statistics = os.path.join(new_general_file_path, "GenerateFASTQRunStatistic.xml")
         shutil.copy2(generate_statistics, new_generate_statistics)
+
+        analysis_log  = os.path.join(general_file_path, "AnalysisLog.txt")
+        new_analysis_log = os.path.join(new_general_file_path, "AnalysisLog.txt")
+        shutil.copy2(analysis_log, new_analysis_log)
 
         data_intensities_basecalls_alignments = os.path.join(general_file_path, "Data", "Intensities", "BaseCalls", "Alignment")
         new_data_intenstisities_basecalls_alignment = os.path.join(new_general_file_path, "Data", "Intensities", "Basecalls")
@@ -89,6 +94,10 @@ class RunOrganiser:
         new_sample_sheet = os.path.join(new_general_file_path, "SampleSheet.csv")
         shutil.copy2(sample_sheet, new_sample_sheet)
 
+        clinical_info = os.path.join(general_file_path, "clinical_info.json")
+        new_clinical_info = os.path.join(new_general_file_path, "clinical_info.json")
+        shutil.copy2(clinical_info, new_clinical_info)
+
     def get_pseudo_numbers(self, sample_sheet_path):
         df = pd.read_csv(sample_sheet_path, delimiter=",", )
         sample_list_header = df["[Header]"].to_list()
@@ -98,7 +107,7 @@ class RunOrganiser:
         return pseudo_numbers
 
     def collect_data_for_pseudo_number(self, filename, new_folder, pseudo_number):
-        basecalls = os.path.join(self.pseudo_runs, filename, "Data", "Intensities", "BaseCalls")
+        basecalls = os.path.join(self.pseudo_run, filename, "Data", "Intensities", "BaseCalls")
         new_fastq_folder = os.path.join(new_folder, "FASTQ")
         Path(new_fastq_folder).mkdir(parents=True, exist_ok=True)
 
@@ -108,7 +117,7 @@ class RunOrganiser:
 
         
         #analysis
-        analysis = os.path.join(self.pseudo_runs, filename, "Analysis")
+        analysis = os.path.join(self.pseudo_run, filename, "Analysis")
         new_analysis = os.path.join(new_folder, "Analysis", "Reports")
         Path(new_analysis).mkdir(parents=True, exist_ok=True)
 
@@ -150,7 +159,7 @@ class RunOrganiser:
                 shutil.copy2(os.path.join(path, file), os.path.join(new_path, file))
 
     def create_patient_files(self, run_file):
-        with open(os.path.join(self.pseudo_runs, run_file, "clinical_info.json")) as json_file:
+        with open(os.path.join(self.pseudo_run, run_file, "clinical_info.json")) as json_file:
             data = json.load(json_file)
 
         if len(data["clinical_data"]) == 0:
@@ -164,6 +173,9 @@ class RunOrganiser:
                 "Birth": patient["Birth"],
                 "Sex": patient["Sex"]
                 }
+
+            patient
+
             patient_file = os.path.join(self.organised_patients, year, f"{patient['ID']}.json")
             with open(patient_file, "w") as f:
                 json.dump(patient_extraction, f, indent=4)
