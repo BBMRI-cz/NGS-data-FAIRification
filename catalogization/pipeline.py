@@ -7,7 +7,7 @@ import os
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
     prog="Organiser",
-    description="Organise pseudonymized runs into a specifed output folder")
+    description="Organise pseudonymized runs into a specifed output folder \n. It is important to use full paths")
 
     parser.add_argument("-r", "--runs", type=str, required=True, help="Path to sequencing run path that will be pseudonymized")
     parser.add_argument("-o", "--output", type=str, required=True, help="Path to the organise file")
@@ -18,5 +18,4 @@ if __name__ == "__main__":
     for file in os.listdir(args.runs):
         run_path = RunOrganiser(args.runs, file, args.output, args.patients)()
         CollectRunMetadata(os.path.join(args.output, run_path))()
-        MolgenisImporter(os.path.join(args.output, run_path, "clinical_info.json"), os.path.join(args.output, run_path, "run_metadata.json"))
-
+        #MolgenisImporter(os.path.join(args.output, run_path, "clinical_info.json"), os.path.join(args.output, run_path, "run_metadata.json"))

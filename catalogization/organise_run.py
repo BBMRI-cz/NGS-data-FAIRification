@@ -23,7 +23,7 @@ class RunOrganiser:
         Path(run_path).mkdir(parents=True, exist_ok=True)
         self.create_sample_dirs(run_path, self.file)
         self.create_general_file(run_path, self.file)
-        self.create_patient_files(self.file)
+        self.create_patient_files(run_path, self.file)
         return os.path.join(y, machine, run_number, self.file)
 
     def split_file_to_parts(self, filename):
@@ -158,8 +158,11 @@ class RunOrganiser:
             if file.endswith("RemoveDuplicates.log"):
                 shutil.copy2(os.path.join(path, file), os.path.join(new_path, file))
 
-    def create_patient_files(self, run_file):
-        with open(os.path.join(self.pseudo_run, run_file, "clinical_info.json")) as json_file:
+    def create_patient_files(self, run_path, run_file):
+        clinical_info_path = os.path.join(self.pseudo_run, run_file, "clinical_info.json")
+        samples_path = os.path.join(run_path, run_file, "Samples")
+
+        with open(clinical_info_path) as json_file:
             data = json.load(json_file)
 
         if len(data["clinical_data"]) == 0:
@@ -167,18 +170,19 @@ class RunOrganiser:
 
         for patient in data["clinical_data"]:
             year = patient["Birth"].replace("--", "").split("/")[1]
-            Path(os.path.join(self.organised_patients, year)).mkdir(parents=True, exist_ok=True)
-            patient_extraction = {
-                "ID": patient["ID"],
-                "Birth": patient["Birth"],
-                "Sex": patient["Sex"]
-                }
+            patient_folder = os.path.join(self.organised_patients, year, f"{patient['ID']}")
+            Path(patient_folder).mkdir(parents=True, exist_ok=True)
+            patient_metadata_file = os.path.join(patient_folder, "patient_metadata.json")
+            with open(patient_metadata_file, "w") as f:
+                json.dump(patient, f, indent=4)
 
-            patient
-
-            patient_file = os.path.join(self.organised_patients, year, f"{patient['ID']}.json")
-            with open(patient_file, "w") as f:
-                json.dump(patient_extraction, f, indent=4)
+            for sample in patient["Samples"]:
+                symlink_path = os.path.join(samples_path, sample["pseudoID"])
+                new_destination = os.path.join(patient_folder, sample["pseudoID"])
+                print(symlink_path)
+                print(new_destination)
+                if not os.path.islink(new_destination):
+                    os.symlink(symlink_path, new_destination, target_is_directory=True, dir_fd=1)
 
 
 if __name__ == "__main__":

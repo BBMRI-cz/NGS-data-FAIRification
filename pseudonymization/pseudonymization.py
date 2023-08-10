@@ -469,5 +469,4 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--samples_pseudo", type=str, required=True, help="Path to samples pseudonymization json file")
     args = parser.parse_args()
     
-    run_path = Pseudonymizer(args.run, args.export, args.pred_pseudo, args.patients_pseudo, args.samples_pseudo)()
-    print(run_path)
+    Pseudonymizer(args.run, args.export, args.pred_pseudo, args.patients_pseudo, args.samples_pseudo)()
