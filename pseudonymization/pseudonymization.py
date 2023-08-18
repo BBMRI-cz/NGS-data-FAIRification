@@ -4,6 +4,7 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 import argparse
 import uuid
+from clinical_finder import FindClinicalInfo
 
 class Pseudonymizer:
     """
@@ -30,7 +31,7 @@ class Pseudonymizer:
     xml_prefix = "{http://www.bbmri.cz/schemas/biobank/data}"
 
     def __init__(self, run_path, bbm_export_folder_path,
-                 pseudonimisation_table_path, pseudonimisation_table_patient_path, pseudonimisation_table_samples_path):
+                 pseudonimisation_tables_path):
         """
         Parameters
         ----------
@@ -44,14 +45,15 @@ class Pseudonymizer:
 
         self.run_path = run_path
         self.export_path = bbm_export_folder_path
-        self.pseudo_table_path = pseudonimisation_table_path
-        self.pseudo_patient_path = pseudonimisation_table_patient_path
-        self.pseudo_samples_path = pseudonimisation_table_samples_path
+        self.pseudonimisation_tables_path = pseudonimisation_tables_path
+        self.pseudo_pred_path = os.path.join(pseudonimisation_tables_path, "predictive.json")
+        self.pseudo_patient_path = os.path.join(pseudonimisation_tables_path, "patient.json")
+        self.pseudo_samples_path = os.path.join(pseudonimisation_tables_path, "samples.json")
 
     def __str__(self) -> str:
         return f"""Path to processed sequence run:\n {self.seq_path}\n
                 Path to export folder:\n {self.export_path}\n
-                Path to pseudonimisation_table: \n {self.pseudo_table_path}"""
+                Path to pseudonimisation_table: \n {self.pseudo_pred_path}"""
 
     def __call__(self):
         self.pseudonymize_run()
@@ -63,8 +65,7 @@ class Pseudonymizer:
         3. Pseudonymizing file names
         """
 
-        clinical_data, predictive_pseudo_tuples = self.pseudo_sample_sheet_and_get_clinical_data()
-        self.save_clinical_data(clinical_data)
+        predictive_pseudo_tuples = self.pseudo_sample_sheet_and_get_clinical_data()
         predictive_pseudo_tuples.sort(key=lambda a: len(a[0]), reverse=True)
         self.create_temporary_pseudo_table(predictive_pseudo_tuples)
         self.locate_all_files_with_predictive_number(predictive_pseudo_tuples)
@@ -96,16 +97,13 @@ class Pseudonymizer:
         sample_list_second = df["Unnamed: 1"].to_list()
         id = sample_list_header.index("Sample_ID") +1
 
-        pseudo_list = []
-        clincal_data = []
 
         predictive_numbers = sample_list_header[id:]
         predictive_numbers = [predictive_number.replace("_", "-") for predictive_number in predictive_numbers]
 
-        for pred_number in predictive_numbers:
-            pseudo_id = self.add_pseudo_ID(pred_number)
-            clincal_data += self.check_for_predictive_number_in_export(pred_number, pseudo_id)
-            pseudo_list.append(pseudo_id)
+        clinical_info_finder = FindClinicalInfo(self.export_path, predictive_numbers, self.pseudonimisation_tables_path, self.run_path)
+        clinical_info_finder()
+        pseudo_list = clinical_info_finder.get_pseudo_ids()
 
         new_column_header = sample_list_header[:id] + pseudo_list
         new_column_second = sample_list_second[:id] + pseudo_list
@@ -119,7 +117,7 @@ class Pseudonymizer:
 
         predictive_pseudo_tuples = [(predictive_numbers[i], pseudo_list[i]) for i in range(len(predictive_numbers))]
 
-        return clincal_data, predictive_pseudo_tuples
+        return predictive_pseudo_tuples
 
     def add_pseudo_ID(self, original_ID):
         """Take single predictive number, create a shortuuid pseudonym
@@ -137,8 +135,8 @@ class Pseudonymizer:
         """
 
         data = {"predictive":[]}
-        if os.path.exists(self.pseudo_table_path):
-            with open(self.pseudo_table_path, 'r') as json_file:
+        if os.path.exists(self.pseudo_pred_path):
+            with open(self.pseudo_pred_path, 'r') as json_file:
                 data = json.load(json_file)
                 pseudo_list = data["predictive"]
         else:
@@ -147,7 +145,7 @@ class Pseudonymizer:
         existing_ids = [val["predictive_number"] for val in pseudo_list]
         if original_ID not in existing_ids:                  
             pseudoID = "mmci_predictive_" + str(uuid.uuid4())
-            with open(self.pseudo_table_path, 'w+') as outfile:
+            with open(self.pseudo_pred_path, 'w+') as outfile:
                 sample = {
                     "predictive_number": original_ID,
                     "pseudo_number": pseudoID}
@@ -364,20 +362,6 @@ class Pseudonymizer:
             for val in pseudo_list:
                 if val["sample_ID"] == original_sample_id:
                     return val["pseudo_sample_ID"]
-    
-    def save_clinical_data(self, clinical_data_list):
-        """Save clinical data to json file 'clinical_info.json'
-
-        Parameters
-        ----------
-        clinical_data_list : List[Dict]
-            List of dictionaries containing clinical information about a patient with a given predictive number
-        """
-
-        clinical_data_list = self.remove_duplcate_dicts(clinical_data_list)
-        clinical_data_dict = {"clinical_data": clinical_data_list}
-        with open(os.path.join(self.run_path, "clinical_info.json"), "w") as f:
-            json.dump(clinical_data_dict, f, indent=4)
 
     def remove_duplcate_dicts(self, dict_list):
         """Remove duplicates from List[Dict]
@@ -419,7 +403,7 @@ class Pseudonymizer:
 
         pseudo_list = [{"predictive_number": pred, "pseudo_number": pseudo} for pred, pseudo in predictive_pseudo_tuples] 
         data = {"pseudonimisation": pseudo_list}
-        with open(f"{self.pseudo_table_path}.temp", 'w+') as outfile:
+        with open(f"{self.pseudo_pred_path}.temp", 'w+') as outfile:
             json.dump(data, outfile, indent=4)
 
     def locate_all_files_with_predictive_number(self, predictive_pseudo_tuples):
@@ -464,9 +448,7 @@ if __name__ == "__main__":
         description="Pseudonymize sequencing run and adds clinical data to it")
     parser.add_argument("-r", "--run", type=str, required=True, help="Path to sequencing run path that will be pseudonymized")
     parser.add_argument("-e", "--export", type=str, required=True, help="Path to Biobank Export to extract clinical data")
-    parser.add_argument("-d", "--pred_pseudo", type=str, required=True, help="Path to predictive pseudonymization json file")
-    parser.add_argument("-p", "--patients_pseudo", type=str, required=True, help="Path to patient pseudonymization json file")
-    parser.add_argument("-s", "--samples_pseudo", type=str, required=True, help="Path to samples pseudonymization json file")
+    parser.add_argument("-p", "--pseudo", type=str, required=True, help="Path to pseudonymization json files")
     args = parser.parse_args()
     
-    Pseudonymizer(args.run, args.export, args.pred_pseudo, args.patients_pseudo, args.samples_pseudo)()
+    Pseudonymizer(args.run, args.export, args.pseudo)()

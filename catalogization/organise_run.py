@@ -98,6 +98,14 @@ class RunOrganiser:
         new_clinical_info = os.path.join(new_general_file_path, "clinical_info.json")
         shutil.copy2(clinical_info, new_clinical_info)
 
+        catalog_info_per_pac = os.path.join(general_file_path, "catalog_info_per_patient")
+        new_catalog_info_per_pac = os.path.join(new_general_file_path, "catalog_info_per_patient")
+        shutil.copytree(catalog_info_per_pac, new_catalog_info_per_pac)
+
+        clinical_info_per_pac = os.path.join(general_file_path, "clinical_info_per_patient")
+        new_clinical_info_per_pac = os.path.join(new_general_file_path, "clinical_info_per_patient")
+        shutil.copytree(clinical_info_per_pac, new_clinical_info_per_pac)
+
     def get_pseudo_numbers(self, sample_sheet_path):
         df = pd.read_csv(sample_sheet_path, delimiter=",", )
         sample_list_header = df["[Header]"].to_list()
@@ -169,20 +177,21 @@ class RunOrganiser:
             return None
 
         for patient in data["clinical_data"]:
-            year = patient["Birth"].replace("--", "").split("/")[1]
+            year = patient["birth"].replace("--", "").split("/")[1]
             patient_folder = os.path.join(self.organised_patients, year, f"{patient['ID']}")
             Path(patient_folder).mkdir(parents=True, exist_ok=True)
             patient_metadata_file = os.path.join(patient_folder, "patient_metadata.json")
             with open(patient_metadata_file, "w") as f:
                 json.dump(patient, f, indent=4)
 
-            for sample in patient["Samples"]:
-                symlink_path = os.path.join(samples_path, sample["pseudoID"])
-                new_destination = os.path.join(patient_folder, sample["pseudoID"])
+            for sample in patient["samples"]:
+                symlink_path = os.path.join(samples_path, sample["pseudo_id"])
+                new_destination = os.path.join(patient_folder, sample["pseudo_id"])
                 print(symlink_path)
                 print(new_destination)
                 if not os.path.islink(new_destination):
-                    os.symlink(symlink_path, new_destination, target_is_directory=True, dir_fd=1)
+                    pass
+                    #os.symlink(symlink_path, new_destination, target_is_directory=True, dir_fd=1)
 
 
 if __name__ == "__main__":

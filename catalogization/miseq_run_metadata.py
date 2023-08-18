@@ -15,8 +15,8 @@ class RunInfoMMCI:
         self.seqPlatform: str = ''      #always "Illumina platform"
         self.seqModel: str = ''         #MiSeq
         self.seqMethod: str = ''        #always "Illumina Sequencing"
-        self.avReadDepth: str = ''      #[predictive number]_StatInfo.txt - FILE PER ONE SAMPLE FROM ANALYSIS
-        self.obsReadLength: str = ''    #[predictive number]_StatInfo.txt - FILE PER ONE SAMPLE FROM ANALYSIS
+        #self.avReadDepth: str = ''      #[predictive number]_StatInfo.txt - FILE PER ONE SAMPLE FROM ANALYSIS
+        #self.obsReadLength: str = ''    #[predictive number]_StatInfo.txt - FILE PER ONE SAMPLE FROM ANALYSIS
         self.percentageQ30: int = ''    #AnalysisLog.txt
         self.percentageTR20: str = ''   #this number is not relevant for MMCI
         self.clusterPF: int = 0         #GemerateFASTQRunStatistics
