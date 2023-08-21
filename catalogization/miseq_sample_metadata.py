@@ -78,15 +78,15 @@ class CollectSampleMetadata:
                 self.sample_info.pathoState = "Tumor"
             if material == "1" or material == "2" or material == "3" or material == "4" or material == "5":
                 self.sample_info.bioSpeciType = "Frozen Tissue"
-                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to &lt;-135°C"
+                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to <-135°C"
             if material == "53" or material == "54" or material == "55" or material == "56":
                 self.sample_info.bioSpeciType = "Cryopreserved Tissue"
             if material == "7":
                 self.sample_info.bioSpeciType = "Cell Pellet"
-                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to &lt;-135°C"
+                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to <-135°C"
             if material == "C" or material == "K" or material == "L" or material == "PD" or material == "SD" or material == "T":
                 self.sample_info.bioSpeciType = "Serum or Plasma"
-                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to &lt;-135°C"
+                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to <-135°C"
             if material == "gD":
                 self.sample_info.bioSpeciType = "Blood DNA"
                 self.sample_info.storCond = "PP tube 0.5–2mL (-35) to (-18)°C"
@@ -95,5 +95,5 @@ class CollectSampleMetadata:
                 self.sample_info.storCond = "PP tube 0.5–2mL (-35) to (-18)°C"
             if material == "PR":
                 self.sample_info.bioSpeciType = "Tumor Cell Line"
-                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to &lt;-135°C"
+                self.sample_info.storCond = "Cryotube 1–2mL Programmable freezing to <-135°C"
             self.sample_info.diagnosis = data.get('samples')[0].get('diagnosis')

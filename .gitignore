@@ -1,5 +1,9 @@
 data/
 playground/
 backup/
+__pycache__/*
 .ipynb_checkpoints/
 **/pseudo_table.json
+*/__pycache__/*
+testing.py
+*.ipynb
