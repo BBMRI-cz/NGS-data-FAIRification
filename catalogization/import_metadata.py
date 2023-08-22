@@ -20,7 +20,7 @@ class Personal:
 class Clinical:
     def __init__(self, patient_dict):
         sample = patient_dict["samples"][0]
-        self.clinicalidentifier = patient_dict["ID"].replace("patient", "clinical"),
+        self.clinicalidentifier = patient_dict["ID"].replace("patient", "clinical")
         self.belongstoperson = patient_dict["ID"]
         self.phenotype = ["NoInformation (NI, nullflavor)"]
         self.unobservedphenotype = ["NoInformation (NI, nullflavor)"]
@@ -44,9 +44,9 @@ class Clinical:
 
     def _calculate_age_at_diagnosis(self, birth, sample):
         if sample["material"] == "tissue":
-            return int(sample["freezeTime"].split("-")[0]) - int(birth)
+            return int(sample["freeze_time"].split("-")[0]) - int(birth)
         else:
-            return int(sample["takingDate"].split("-")[0]) - int(birth)
+            return int(sample["taking_date"].split("-")[0]) - int(birth)
 
     def _adjust_diagnosis(self, diagnosis):
         if len(diagnosis) == 4:
@@ -62,9 +62,9 @@ class Material:
         sample =  patient_dict["samples"][0]
         self.materialidentifier = sample["sample_ID"]
         self.collectedfromperson = patient_dict["ID"]
-        self.belongstodiagnosis = patient_dict["ID"].replace("patient", "clinical"),
-        self.samplingtimestamp = sample["cutTime"]
-        self.registrationtimestamp = sample["freezeTime"]
+        self.belongstodiagnosis = patient_dict["ID"].replace("patient", "clinical")
+        self.samplingtimestamp = sample["cut_time"]
+        self.registrationtimestamp = sample["freeze_time"]
         self.samplingprotocol = "NoInformation (NI, nullflavor)"
         self.samplingprotocoldeviation = "NoInformation (NI, nullflavor)"
         self.reasonforsamplingprotocoldeviation = "NoInformation (NI, nullflavor)"
@@ -83,7 +83,7 @@ class SamplePreparation:
 
     def __init__(self, patient_dict):
         sample = patient_dict["samples"][0]
-        self.sampleprepidentifier= sample["pseudo_id"].replace("predictive", "sampleprep")
+        self.sampleprepidentifier= sample["pseudo_ID"].replace("predictive", "sampleprep")
         self.belongstomaterial= sample["sample_ID"]
 
         # TODO wait for 'libraries_and_runs' to be final.
@@ -99,8 +99,8 @@ class SamplePreparation:
 class Sequencing:
     def __init__(self, patient_dict, sample_dict, run_metadata_dict):
         sample = patient_dict["samples"][0]
-        self.sequencingidentifier = sample["pseudo_id"]
-        self.belongstosample = sample["pseudo_id"].replace("predictive", "sampleprep")
+        self.sequencingidentifier = sample["pseudo_ID"]
+        self.belongstosample = sample["pseudo_ID"].replace("predictive", "sampleprep")
         self.sequencingdate = run_metadata_dict["seqDate"]
         self.sequencingplatform = run_metadata_dict["seqPlatform"]
         self.sequencinginstrumentmodel = run_metadata_dict["seqModel"]
@@ -115,8 +115,8 @@ class Sequencing:
 class Analysis:
     def __init__(self, patient_dict):
         sample = patient_dict["samples"][0]
-        self.analysisidentifier = sample["pseudo_id"].replace("predictive", "analysis")
-        self.belongstosequencing = sample["pseudo_id"]
+        self.analysisidentifier = sample["pseudo_ID"].replace("predictive", "analysis")
+        self.belongstosequencing = sample["pseudo_ID"]
         self.physicaldatalocation = "Masaryk Memorial Cancer Istitute"
         self.abstractdatalocation = "Sensitive Cloud Institute of Computer Science"
         self.dataformatsstored = [".fastq", "VCF"]
@@ -130,9 +130,9 @@ class Analysis:
 
 class MolgenisImporter:
 
-    def __init__(self, catalog_info, samples_metadata, run_metadata):
+    def __init__(self, catalog_info, samples_metadata, run_metadata, login, password):
         self.session = molgenis.client.Session("https://data.bbmri.cz")
-        self.session.login("*********", "*********")
+        self.session.login(login, password)
         self.catalog_info_folder = catalog_info
         self.samples_metadata_folder = samples_metadata
         with open(run_metadata, "r") as f:
@@ -141,7 +141,7 @@ class MolgenisImporter:
     def __call__(self):
         for pred_number in os.listdir(self.catalog_info_folder):
             clinical_info_file = os.path.join(self.catalog_info_folder, pred_number)
-            print(clinical_info_file)
+
             with open(clinical_info_file, "r") as f:
                 clinical_info_file = json.load(f)
 
@@ -150,22 +150,34 @@ class MolgenisImporter:
                 sample_metadata_file = json.load(f)
 
             personal = Personal(clinical_info_file)
-            self._add_data(personal ,'fair-genomes_personal')
+            personal_ids = [val["personalidentifier"] for val in self.session.get('fair-genomes_personal')]
+            if personal.personalidentifier not in personal_ids:
+                self._add_data(personal ,'fair-genomes_personal')
 
             clinical = Clinical(clinical_info_file)
-            self._add_data(clinical, 'fair-genomes_clinical')
+            clinical_ids = [val["clinicalidentifier"] for val in self.session.get('fair-genomes_clinical')]
+            if clinical.clinicalidentifier not in clinical_ids:
+                self._add_data(clinical, 'fair-genomes_clinical')
 
             material = Material(clinical_info_file, sample_metadata_file)
-            self._add_data(material, 'fair-genomes_material')
+            material_ids = [val["materialidentifier"] for val in self.session.get('fair-genomes_material')]
+            if material.materialidentifier not in material_ids:
+                self._add_data(material, 'fair-genomes_material')
 
             sample_preparation = SamplePreparation(clinical_info_file)
-            self._add_data(sample_preparation, 'fair-genomes_samplepreparation')
+            sample_prep_ids = [val["sampleprepidentifier"] for val in self.session.get('fair-genomes_samplepreparation')]
+            if sample_preparation.sampleprepidentifier not in sample_prep_ids:
+                self._add_data(sample_preparation, 'fair-genomes_samplepreparation')
 
             sequencing = Sequencing(clinical_info_file, sample_metadata_file, self.run_metadata)
-            self._add_data(sequencing, 'fair-genomes_sequencing')
+            sequencing_ids = [val["sequencingidentifier"] for val in self.session.get('fair-genomes_sequencing')]
+            if sequencing.sequencingidentifier not in sequencing_ids:
+                self._add_data(sequencing, 'fair-genomes_sequencing')
 
             analysis = Analysis(clinical_info_file)
-            self._add_data(analysis, 'fair-genomes_analysis')
+            analysis_ids = [val["analysisidentifier"] for val in self.session.get("fair-genomes_analysis")]
+            if analysis.analysisidentifier not in analysis_ids:
+                self._add_data(analysis, 'fair-genomes_analysis')
 
     def __del__(self):
         self.session.logout()

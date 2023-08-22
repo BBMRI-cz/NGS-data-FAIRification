@@ -18,7 +18,7 @@ class RunOrganiser:
 
     def organise_run(self):
         y, machine, run_number = self.split_file_to_parts(self.file)
-        print(f"Run {self.file}: {y} --> {machine} --> {run_number} --> {self.file}")
+        #print(f"Run {self.file}: {y} --> {machine} --> {run_number} --> {self.file}")
         run_path = os.path.join(self.organised_runs, y, machine, run_number)
         Path(run_path).mkdir(parents=True, exist_ok=True)
         self.create_sample_dirs(run_path, self.file)
@@ -98,8 +98,8 @@ class RunOrganiser:
         new_clinical_info = os.path.join(new_general_file_path, "clinical_info.json")
         shutil.copy2(clinical_info, new_clinical_info)
 
-        catalog_info_per_pac = os.path.join(general_file_path, "catalog_info_per_patient")
-        new_catalog_info_per_pac = os.path.join(new_general_file_path, "catalog_info_per_patient")
+        catalog_info_per_pac = os.path.join(general_file_path, "catalog_info_per_pred_number")
+        new_catalog_info_per_pac = os.path.join(new_general_file_path, "catalog_info_per_pred_number")
         shutil.copytree(catalog_info_per_pac, new_catalog_info_per_pac)
 
         clinical_info_per_pac = os.path.join(general_file_path, "clinical_info_per_patient")
@@ -185,10 +185,10 @@ class RunOrganiser:
                 json.dump(patient, f, indent=4)
 
             for sample in patient["samples"]:
-                symlink_path = os.path.join(samples_path, sample["pseudo_id"])
-                new_destination = os.path.join(patient_folder, sample["pseudo_id"])
-                print(symlink_path)
-                print(new_destination)
+                symlink_path = os.path.join(samples_path, sample["pseudo_ID"])
+                new_destination = os.path.join(patient_folder, sample["pseudo_ID"])
+                #print(symlink_path)
+                #print(new_destination)
                 if not os.path.islink(new_destination):
                     pass
                     #os.symlink(symlink_path, new_destination, target_is_directory=True, dir_fd=1)

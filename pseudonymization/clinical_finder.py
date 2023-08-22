@@ -5,11 +5,29 @@ import xml.etree.ElementTree as ET
 import copy
 
 class Material:
+    """
+    Parent class for all the different materials present in the LTS (Long term Storage) of MMCI Biobank
+
+    Attributes
+    ----------
+    pseudo_ID : str
+        randomly generated (UUID v4) pseudo_ID (originally predictive number)
+    biopsy_number : str
+        if the sample underwent a biopsy an unique number of that biopsy is assigned
+    sample_ID :  str
+        randomly generated (UUID v4) sample_ID
+    sample_number: str
+        number of the sample stored
+    available_samples_number: str
+        number of available sample stored
+    material_type: str 
+        an integer defining what type of material is the sample
+    """
 
     xml_prefix = "{http://www.bbmri.cz/schemas/biobank/data}"
 
     def __init__(self, lts_child, pseudo_number, sample_table):
-        self.pseudo_id = pseudo_number
+        self.pseudo_ID = pseudo_number
         self.biopsy_number = lts_child.get(f"biopsy")
         self.sample_ID = self._generate_pseudo_sample_id(lts_child.get("sampleId"), sample_table)
         self.sample_number = lts_child.find(f"{self.xml_prefix}samplesNo").text
@@ -23,6 +41,9 @@ class Material:
 
     def __hash__(self) -> int:
         return hash(("sample_id", self.sample_ID))
+
+    def __str__(self) -> str:
+        return f"{self.sample_ID}"
 
     def __lt__(self, other) -> bool:
         if isinstance(self, Tissue) and isinstance(other, Tissue):
@@ -62,33 +83,97 @@ class Material:
                     return val["pseudo_sample_ID"]
 
 class Tissue(Material):
-    
+    """
+    Child Class of Material defining the Tissue
+
+    Attributes
+    ----------
+    material : str
+        "tissue"
+    pTNM : str
+        TNM-7 of the tissue
+    morphology : str
+        ICD-03 morphology part of the tissue
+    diagnosis : str
+        ICD-10 diagnosis of the tissue
+    cut_time : str
+        time the tissue was cut from the patient in format (YYYY-MM-DDTHH:MM:SS)
+    freeze_time : str
+        time the tissue was frozen in format (YYYY-MM-DDTHH:MM:SS)
+    retrieved : str
+        Method specifiing how the tissue was retrieved from the patient
+    """
+
+
     def __init__(self, lts_child, pseudo_number, sample_table):
         super().__init__(lts_child, pseudo_number, sample_table)
         self.material = "tissue"
         self.pTNM = lts_child.find(f"{super().xml_prefix}pTNM").text
         self.morphology = lts_child.find(f"{super().xml_prefix}morphology").text
         self.diagnosis = lts_child.find(f"{super().xml_prefix}diagnosis").text
-        self.cutTime = lts_child.find(f"{super().xml_prefix}cutTime").text
-        self.freezeTime = lts_child.find(f"{super().xml_prefix}freezeTime").text
+        self.cut_time = lts_child.find(f"{super().xml_prefix}cutTime").text
+        self.freeze_time = lts_child.find(f"{super().xml_prefix}freezeTime").text
         self.retrieved = lts_child.find(f"{super().xml_prefix}retrieved").text
 
+    def __str__(self) -> str:
+        return f"{self.sample_ID}"
+
+    def __repr__(self) -> str:
+        return f"{self.sample_ID}"
+
 class Serum(Material):
+    """
+    Child Class of Material defining the Serum
+
+    Attributes
+    ----------
+    material : str
+        "serum"
+    diagnosis : str
+        ICD-10 diagnosis of the tissue
+    taking_date : str
+        date when the serum was sampled from the patient in format (YYYY-MM-DD)
+    """
 
     def __init__(self, lts_child, pseudo_number,  sample_table):
         super().__init__(lts_child, pseudo_number,  sample_table)
         self.material = "serum"
         self.diagnosis = lts_child.find(f"{super().xml_prefix}diagnosis").text
-        self.takingDate = lts_child.find(f"{super().xml_prefix}takingDate").text
+        self.taking_date = lts_child.find(f"{super().xml_prefix}takingDate").text
 
 class Genome(Material):
+    """
+    Child Class of Material defining the Genome
+
+    Attributes
+    ----------
+    material : str
+        "serum"
+    taking_date : str
+        date when the genome was sampled from the patient in format (YYYY-MM-DD)
+    """
 
     def __init__(self, lts_child, pseudo_number,  sample_table):
         super().__init__(lts_child, pseudo_number,  sample_table)
         self.material = "genome"
-        self.takingDate = lts_child.find(f"{super().xml_prefix}takingDate").text
+        self.taking_date = lts_child.find(f"{super().xml_prefix}takingDate").text
 
 class Patient:
+    """
+    Class defining an pseudonimized patient that gave concent to the 
+    BBM of MMCI that his material and data can be used for research
+
+    Attributes
+    ----------
+    ID  : str
+        randomly generated (UUID v4)
+    birth : str
+        birth month and year of the patient
+    sex : str
+        biological sex of the patient
+    samples : List[Material]
+        list of materials that belong to the patient
+    """
 
     def __init__(self, id: str, birth: str, sex: str, samples: list[Material]):
         self.ID = id
@@ -103,6 +188,37 @@ class Patient:
 
 
 class FindClinicalInfo:
+    """
+    Class that collects all the data from BBM exports and connects them with a given sequencing process
+
+    Attributes
+    ----------
+    export_path : str
+        path to an file that consist of XML exports with biobank and clinical information
+    predictive_numbers : List[str]
+        list of predictive numbers to be search in BBM exports
+    pseudo_pred_table_path :  str
+        path to a pseudonymization of predictive numbers json file
+    pseudo_patient_table_path :  str
+        path to a pseudonymization of patient numbers json file
+    pseudo_sample_table_path :  str
+        path to a pseudonymization of sample numbers json file
+    run_path : str
+        path to the sequencing run
+    pseudo_ids:
+        In the collection of clinical info pseudo_ids (originally predictive numbers) are collected
+
+    Methods
+    -------
+    __call_(self)
+        Performs the following steps:
+            1. Collects all clinical information in export and convert it to nicer json format
+            2. Splits clinical info per patient and removes duplicated values
+            3. Splits clinical info per pseudo_id and only takes one material per pseudo_id
+
+    get_pseudo_ids(self) -> List[str]
+        Returns all pseudo_ids generated in the search process
+    """
     
     def __init__(self, bbm_export_folder_path: str, predictive_numbers: list[str],
                  pseudo_tables_path: str, run_path: str):
@@ -130,15 +246,19 @@ class FindClinicalInfo:
                 json.dump(pac_dict, f, indent=4)
 
             patient.samples = self._get_samples_with_unique_predictive_number(patient.samples)
-            pac_dict_for_catalogue = self._convert_samples_to_dict(patient).__dict__
-            catalog_info_path = os.path.join(self.run_path,
-                                            "catalog_info_per_patient",
-                                            f"{pac_dict_for_catalogue['samples'][0]['pseudo_id']}.json")
-            if not os.path.exists(os.path.join(self.run_path, "catalog_info_per_patient")):
-                os.mkdir(os.path.join(self.run_path, "catalog_info_per_patient"))
+            new_patient = Patient(patient.ID, patient.birth, patient.sex, [])
+
+            for sample in patient.samples:
+                new_patient.samples = [sample]
+                pac_dict_for_catalogue = self._convert_samples_to_dict(new_patient).__dict__
+                catalog_info_path = os.path.join(self.run_path,
+                                                "catalog_info_per_pred_number",
+                                                f"{pac_dict_for_catalogue['samples'][0]['pseudo_ID']}.json")
+                if not os.path.exists(os.path.join(self.run_path, "catalog_info_per_pred_number")):
+                    os.mkdir(os.path.join(self.run_path, "catalog_info_per_pred_number"))
             
-            with open(catalog_info_path, "w") as f:
-                json.dump(pac_dict_for_catalogue, f, indent=4)
+                with open(catalog_info_path, "w") as f:
+                    json.dump(pac_dict_for_catalogue, f, indent=4)
 
 
     def get_pseudo_ids(self) -> list[str]:
@@ -149,7 +269,7 @@ class FindClinicalInfo:
         is_unique = True
         for sample in samples:
             for sample_unique in unique:
-                if sample.pseudo_id == sample_unique.pseudo_id:
+                if sample.pseudo_ID == sample_unique.pseudo_ID:
                     is_unique = False
             if is_unique:
                 unique.append(sample)
@@ -175,16 +295,32 @@ class FindClinicalInfo:
         return patient_list
 
     def _combine_patients_with_same_id(self, collection):
+        """
+        !!! This function can be written more efficiently !!!
+        REFACTOR
+
+        Attributes
+        ----------
+        collection: List[Patient]
+
+
+        Returns
+        -------
+        combined_collection : List[Patient]
+        """
         combined_collection = []
         for i in range(len(collection)):
             for y in range(len(collection)):
-                    if y != i and collection[i] == collection[y] and collection[i] not in combined_collection:
+                    if y != i and collection[i] == collection[y] and collection[i] in combined_collection:
+                        combined_collection[combined_collection.index(collection[i])].samples += collection[y].samples
+                    elif y != i and collection[i] == collection[y] and collection[i] not in combined_collection:
                         patient_connected = collection[i]
                         patient_connected.samples += collection[y].samples
                         combined_collection.append(patient_connected)
                     elif y != i and collection[i] != collection[y] and collection[i] not in combined_collection:
                         patient_connected = collection[i]
                         combined_collection.append(patient_connected)
+                    
         return combined_collection
 
     def _convert_collection_to_dict(self, collection: list[Patient]) -> list[dict]:
@@ -281,7 +417,6 @@ class FindClinicalInfo:
                     sample_data
                 )
                 clinical_data.append(patient)
-
         return clinical_data
 
     def _fix_predictive_number(self, predictive_number):

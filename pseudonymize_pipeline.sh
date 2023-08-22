@@ -11,7 +11,7 @@ SC_FOLDER="/home/houfek/Work/NGS-data-FAIRification/playground/muni-sc/MiSEQ"
 #filter
 #grep -lEir $FULL_EXPORT -e 'predictive_number="[0-9]{4}/[0-9]{1,4}"' | xargs cp -t $PREDICTIVE_EXPORT
 #remove duplicates
-fdupes -dN $PREDICTIVE_EXPORT
+#fdupes -dN $PREDICTIVE_EXPORT
 
 for f in $FILES; do
     echo $f
