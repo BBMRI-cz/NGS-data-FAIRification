@@ -237,14 +237,6 @@ class FindClinicalInfo:
             json.dump(self._convert_collection_to_dict(clinical_data), f, indent=4)
         
         for patient in clinical_data:
-            pac_dict = self._convert_samples_to_dict(patient).__dict__
-            clinical_info_path = os.path.join(self.run_path, "clinical_info_per_patient", f"{pac_dict['ID']}.json")
-            if not os.path.exists(os.path.join(self.run_path, "clinical_info_per_patient")):
-                os.mkdir(os.path.join(self.run_path, "clinical_info_per_patient"))
-            
-            with open(clinical_info_path, "w") as f:
-                json.dump(pac_dict, f, indent=4)
-
             patient.samples = self._get_samples_with_unique_predictive_number(patient.samples)
             new_patient = Patient(patient.ID, patient.birth, patient.sex, [])
 

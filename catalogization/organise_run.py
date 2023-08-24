@@ -18,7 +18,6 @@ class RunOrganiser:
 
     def organise_run(self):
         y, machine, run_number = self.split_file_to_parts(self.file)
-        #print(f"Run {self.file}: {y} --> {machine} --> {run_number} --> {self.file}")
         run_path = os.path.join(self.organised_runs, y, machine, run_number)
         Path(run_path).mkdir(parents=True, exist_ok=True)
         self.create_sample_dirs(run_path, self.file)
@@ -102,10 +101,6 @@ class RunOrganiser:
         new_catalog_info_per_pac = os.path.join(new_general_file_path, "catalog_info_per_pred_number")
         shutil.copytree(catalog_info_per_pac, new_catalog_info_per_pac)
 
-        clinical_info_per_pac = os.path.join(general_file_path, "clinical_info_per_patient")
-        new_clinical_info_per_pac = os.path.join(new_general_file_path, "clinical_info_per_patient")
-        shutil.copytree(clinical_info_per_pac, new_clinical_info_per_pac)
-
     def get_pseudo_numbers(self, sample_sheet_path):
         df = pd.read_csv(sample_sheet_path, delimiter=",", )
         sample_list_header = df["[Header]"].to_list()
@@ -123,7 +118,6 @@ class RunOrganiser:
             if pseudo_number in file:
                 shutil.copy2(os.path.join(basecalls, file), os.path.join(new_fastq_folder, file))
 
-        
         #analysis
         analysis = os.path.join(self.pseudo_run, filename, "Analysis")
         new_analysis = os.path.join(new_folder, "Analysis", "Reports")
@@ -132,7 +126,6 @@ class RunOrganiser:
         self.get_bams(os.path.join(analysis, "BAM"), new_analysis, pseudo_number)
         self.get_outputs(os.path.join(analysis, f"{pseudo_number}_Output", pseudo_number), new_analysis, pseudo_number)
         self.get_convert(os.path.join(analysis, f"{pseudo_number}_Output", "Preprocessed"), new_analysis)
-
 
         #metadata
     def get_bams(self, path, new_path, pseudo_number):
@@ -187,12 +180,8 @@ class RunOrganiser:
             for sample in patient["samples"]:
                 symlink_path = os.path.join(samples_path, sample["pseudo_ID"])
                 new_destination = os.path.join(patient_folder, sample["pseudo_ID"])
-                #print(symlink_path)
-                #print(new_destination)
                 if not os.path.islink(new_destination):
-                    pass
-                    #os.symlink(symlink_path, new_destination, target_is_directory=True, dir_fd=1)
-
+                    os.symlink(f"{symlink_path}/", new_destination,  target_is_directory=True, dir_fd=1)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

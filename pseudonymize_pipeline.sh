@@ -19,5 +19,5 @@ for f in $FILES; do
     python /home/houfek/Work/NGS-data-FAIRification/pseudonymization/pseudonymization.py -r $f -e $PREDICTIVE_EXPORT -p $PSEUDO_TABLE 
     bash  /home/houfek/Work/NGS-data-FAIRification/pseudonymization/replace_predictive.sh "${PSEUDO_TABLE}predictive.json.temp" $f
     rm "${PSEUDO_TABLE}predictive.json.temp"
-    # mv $f "${SC_FOLDER}/."
+    mv $f "${SC_FOLDER}/."
 done
