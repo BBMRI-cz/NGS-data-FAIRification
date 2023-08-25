@@ -25,8 +25,7 @@ class Clinical:
         self.phenotype = ["NoInformation (NI, nullflavor)"]
         self.unobservedphenotype = ["NoInformation (NI, nullflavor)"]
         self.phenotypicdataavailable = ["NoInformation (NI, nullflavor)"]
-        self.clinicaldiagnosis = "C46 Kaposi sarcoma" # Tohle už projde, potřebujeme mapovací tabulku
-        #self.clinicaldiagnosis = self._adjust_diagnosis(sample["diagnosis"]) if sample["material"] != "genome" else None
+        self.clinicaldiagnosis = self._adjust_diagnosis(sample["diagnosis"]) if sample["material"] != "genome" else None
         self.moleculardiagnosisgene = ["NoInformation (NI, nullflavor)"]
         self.moleculardiagnosisother = None
         self.ageatdiagnosis = self._calculate_age_at_diagnosis(patient_dict["birth"].split("/")[1], sample)
@@ -40,7 +39,7 @@ class Clinical:
         self.ageofonset = self._calculate_age_at_diagnosis(patient_dict["birth"].split("/")[1], sample)
         self.firstcontact = None
         self.functioning = None
-        self.materialusedindiagnosis = None # Here could be something
+        self.materialusedindiagnosis = None
 
     def _calculate_age_at_diagnosis(self, birth, sample):
         if sample["material"] == "tissue":
@@ -50,11 +49,8 @@ class Clinical:
 
     def _adjust_diagnosis(self, diagnosis):
         if len(diagnosis) == 4:
-            return diagnosis[:3] + "." + diagnosis[3]
-        elif len(diagnosis) == 3:
-            return diagnosis[:3] + ".9"
-        else:
-            return None
+            return diagnosis[:3]
+        return diagnosis
 
 class Material:
 
