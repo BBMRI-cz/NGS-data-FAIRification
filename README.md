@@ -1,5 +1,5 @@
 # NGS-data-FAIRification
-Integration, cataloguing and management of biobanking and clinical data using FAIR Genomes Metadata Schema.
+Integration, cataloguing and management of biobanking and clinical data using FAIR Genomes Metadata Schema..
 
 ## Code
 
