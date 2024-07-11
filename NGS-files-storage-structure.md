@@ -1,4 +1,4 @@
-*SensitiveCloud service*
+ Within the *SensitiveCloud service*, data are stored in the following structure (data can be accessed in two ways):
 
 NGS data available from: *server ANON*  
 Path to data: *muni-ss/MiSEQ*
