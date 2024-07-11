@@ -1,3 +1,5 @@
+Within the process of data cleaning, the following files are stored for future use.
+
 | **SEQUENCING MACHINE OUTPUT**                      | **NextSeq**                                      | **MiSeq**                                           |
 |----------------------------------------------------|--------------------------------------------------|-----------------------------------------------------|
 |                                                    | SampleSheet.csv                                  | SampleSheet.csv                                     |
