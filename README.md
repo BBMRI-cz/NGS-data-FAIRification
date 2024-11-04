@@ -13,11 +13,10 @@ This repository stores supplementary files that are intended to be published tog
 
 Code of this project is separeted into three parts (repositories)
 1. [Pseudonymisation](https://github.com/BBMRI-cz/data-catalogue-pseudonymisation)
-
 This repository takes care of pseudonymisation and collecting clinical information from the BBM export
+
 2. [Organiser](https://github.com/BBMRI-cz/data-catalogue-organiser)
- 
-This repository cleans up the genomic data and organises them for later use. Also it collects structured genomic data and metadata.
+ This repository cleans up the genomic data and organises them for later use. Also it collects structured genomic data and metadata.
 
 3. [Uploader](https://github.com/BBMRI-cz/data-catalogue-uploader)
 This repository uploads collected metadata to the metadata catalogue data.bbmri.cz.
