@@ -22,7 +22,7 @@ This pipeline enhances data handling efficiency within the biobank environment a
 
 ## Code
 
-Code of this project is separeted into three parts (repositories):
+Code of this project is separeted into three main parts (repositories):
 1. [Pseudonymiser](https://github.com/BBMRI-cz/data-catalogue-pseudonymisation)
    
   This repository takes care of pseudonymisation and collecting clinical information from the BBM export.
@@ -34,6 +34,11 @@ Code of this project is separeted into three parts (repositories):
 3. [Uploader](https://github.com/BBMRI-cz/data-catalogue-uploader)
    
   This repository uploads collected metadata to the metadata catalogue [data.bbmri.cz](https://data.bbmri.cz/).
+  
+  
+[Data Retrieval](https://github.com/BBMRI-cz/data-catalogue-data-retrieval)
+
+The additional (forth) repository provides tools for retrieving data from the catalog or secure storage, enabling the re-identification of original identifiers using pseudonyms and facilitating the retrieval of pseudonymized data in de-pseudonymised form from protected storage.
 
 ## Documents
 This repository stores supplementary files that are intended to be published together with the paper "Integration, Cataloguing and Management of Biobanking and Clinical Data Using FAIR Genomes Metadata Schema". Those files are located in "documents" folder. 
