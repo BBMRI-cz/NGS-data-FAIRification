@@ -41,8 +41,10 @@ Code of this project is separeted into three main parts (repositories):
 The additional (forth) repository provides tools for retrieving data from the catalog or secure storage, enabling the re-identification of original identifiers using pseudonyms and facilitating the retrieval of pseudonymized data in de-pseudonymised form from protected storage.
 
 ## Links for Further Documentation
-- https://gitlab.int.mou.cz/bbmri/sequencingdata
-- https://gitlab.ics.muni.cz/groups/bbmri.cz/-/wikis/MMCI/Anon-server
+
+Internal Documentation
+- https://gitlab.int.mou.cz/bbmri/sequencingdata - requiring MMCI VPN connection - contains documentation for servers BBMRI-ANON1 and BBMRI-KATALOG and its workflow
+- https://gitlab.ics.muni.cz/groups/bbmri.cz/-/wikis/MMCI/Anon-server - requiring autentication and granted access -  contains documentation for BBMRI-ANON1 and SensitiveCloud connection 
 
 ## Documents
 This repository stores supplementary files that are intended to be published together with the paper "Integration, Cataloguing and Management of Biobanking and Clinical Data Using FAIR Genomes Metadata Schema". Those files are located in "documents" folder. 
