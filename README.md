@@ -40,6 +40,10 @@ Code of this project is separeted into three main parts (repositories):
 
 The additional (forth) repository provides tools for retrieving data from the catalog or secure storage, enabling the re-identification of original identifiers using pseudonyms and facilitating the retrieval of pseudonymized data in de-pseudonymised form from protected storage.
 
+## Links for Further Documentation
+- https://gitlab.int.mou.cz/bbmri/sequencingdata
+- https://gitlab.ics.muni.cz/groups/bbmri.cz/-/wikis/MMCI/Anon-server
+
 ## Documents
 This repository stores supplementary files that are intended to be published together with the paper "Integration, Cataloguing and Management of Biobanking and Clinical Data Using FAIR Genomes Metadata Schema". Those files are located in "documents" folder. 
 1. Supplementary File 1 & 2 (folder mindmaps_of_sequencer_outputs): contains schemas created when mapping files inside sequencer's output to distinguish important files from those which can be removed.
