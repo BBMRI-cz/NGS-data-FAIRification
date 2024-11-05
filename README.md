@@ -20,7 +20,7 @@ The goal of this project is to create a robust data pipeline capable of handling
 
 This pipeline enhances data handling efficiency within the biobank environment and supports further research by providing well-structured, reliable data sets.
 
-## Code
+## Code - FAIRification pipeline
 
 Code of this project is separeted into three main parts (repositories):
 1. [Pseudonymiser](https://github.com/BBMRI-cz/data-catalogue-pseudonymisation)
@@ -35,10 +35,19 @@ Code of this project is separeted into three main parts (repositories):
    
   This repository uploads collected metadata to the metadata catalogue [data.bbmri.cz](https://data.bbmri.cz/).
   
-  
-[Data Retrieval](https://github.com/BBMRI-cz/data-catalogue-data-retrieval)
+## Data Retrieval Application
 
-The additional (forth) repository provides tools for retrieving data from the catalog or secure storage, enabling the re-identification of original identifiers using pseudonyms and facilitating the retrieval of pseudonymized data in de-pseudonymised form from protected storage.
+The additional (forth) [Data Retrieval](https://github.com/BBMRI-cz/data-catalogue-data-retrieval) repository provides tools for retrieving data from the catalog or secure storage, enabling the re-identification of original identifiers using pseudonyms and facilitating the retrieval of pseudonymized data in de-pseudonymised form from protected storage.
+
+
+This repository includes an application developed for the retrieval of data, available (requiring MMCI VPN connection) at [sequencing.int.mou.cz](http://sequencing.int.mou.cz). The application offers two main functionalities:
+
+1. **Pathology Data Retrieval**  
+   Accessible at [sequencing.int.mou.cz/pathology-data-retrieval](http://sequencing.int.mou.cz/pathology-data-retrieval), this tool is designed for the pathology department. Pathologists can input a predictive identifier that the application automatically converts into a pseudonym and vice versa. This feature enables the department to seamlessly retrieve pseudonymized data in its original, non-pseudonymized form.
+
+2. **Sample Verification for Biobank Staff**  
+   The second feature supports biobank staff by allowing them to upload an Excel export containing sample information. The application checks each sample and appends information directly into the Excel file, indicating whether sequencing data is available for each sample.
+
 
 ## Links for Further Documentation
 
