@@ -46,7 +46,7 @@ This repository includes an application developed for the retrieval of data, ava
    Accessible at [sequencing.int.mou.cz/pathology-data-retrieval](http://sequencing.int.mou.cz/pathology-data-retrieval), this tool is designed for the pathology department. Pathologists can input a predictive identifier that the application automatically converts into a pseudonym and vice versa. This feature enables the department to seamlessly retrieve pseudonymized data in its original, non-pseudonymized form.
 
 2. **Sample Verification for Biobank Staff**  
-   The second feature supports biobank staff by allowing them to upload an Excel export containing sample information. The application checks each sample and appends information directly into the Excel file, indicating whether sequencing data is available for each sample.
+   The second feature available at [sequencing.int.mou.cz/bbm-sequencing-upload](http://sequencing.int.mou.cz/bbm-sequencing-upload) supports biobank staff by allowing them to upload an Excel export containing sample information. The application checks each sample and appends information directly into the Excel file, indicating whether sequencing data is available for each sample.
 
 
 ## Links for Further Documentation
