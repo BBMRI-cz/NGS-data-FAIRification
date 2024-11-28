@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/572450436.svg)](https://doi.org/10.5281/zenodo.10390517)
 # Integration, cataloguing and management of biobanking and clinical data using FAIR Genomes Metadata Schema.
 Welcome to the repository that presents our work at the Bank of Biological Material of Masaryk Memorial Cancer Institute. Our team has developed an advanced, semi-automated data pipeline designed to streamline and integrate data from various sources associated with the biobank and upload metadata do the [data.bbmri.cz](https://data.bbmri.cz/) catalogue.
 
